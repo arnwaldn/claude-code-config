@@ -1,81 +1,4 @@
 {
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python \"$HOME/.claude/hooks/atum-session-start.py\"",
-            "timeout": 15
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python \"$HOME/.claude/hooks/secret-scanner.py\"",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [[ -f \"$CLAUDE_TOOL_FILE_PATH\" ]]; then cp \"$CLAUDE_TOOL_FILE_PATH\" \"$CLAUDE_TOOL_FILE_PATH.backup.$(date +%s)\" 2>/dev/null || true; fi"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python \"$HOME/.claude/hooks/dangerous-command-blocker.py\" 2>&1",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [[ \"$CLAUDE_TOOL_FILE_PATH\" == *.js || \"$CLAUDE_TOOL_FILE_PATH\" == *.ts || \"$CLAUDE_TOOL_FILE_PATH\" == *.jsx || \"$CLAUDE_TOOL_FILE_PATH\" == *.tsx || \"$CLAUDE_TOOL_FILE_PATH\" == *.json || \"$CLAUDE_TOOL_FILE_PATH\" == *.css || \"$CLAUDE_TOOL_FILE_PATH\" == *.html ]]; then npx prettier --write \"$CLAUDE_TOOL_FILE_PATH\" 2>/dev/null || true; elif [[ \"$CLAUDE_TOOL_FILE_PATH\" == *.py ]]; then black \"$CLAUDE_TOOL_FILE_PATH\" 2>/dev/null || true; elif [[ \"$CLAUDE_TOOL_FILE_PATH\" == *.go ]]; then gofmt -w \"$CLAUDE_TOOL_FILE_PATH\" 2>/dev/null || true; elif [[ \"$CLAUDE_TOOL_FILE_PATH\" == *.rs ]]; then rustfmt \"$CLAUDE_TOOL_FILE_PATH\" 2>/dev/null || true; elif [[ \"$CLAUDE_TOOL_FILE_PATH\" == *.php ]]; then php-cs-fixer fix \"$CLAUDE_TOOL_FILE_PATH\" 2>/dev/null || true; fi"
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python \"$HOME/.claude/hooks/atum-post-write.py\"",
-            "timeout": 10,
-            "statusMessage": "ATUM: hashing file..."
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python \"$HOME/.claude/hooks/atum-compliance-check.py\"",
-            "timeout": 15,
-            "statusMessage": "ATUM: compliance check..."
-          }
-        ]
-      }
-    ]
-  },
   "statusLine": {
     "type": "command",
     "command": "python \"$HOME/.claude/scripts/context-monitor.py\""
@@ -95,6 +18,8 @@
     "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "8000",
     "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
     "DISABLE_COST_WARNINGS": "1",
-    "ATUM_PROJECT_DIR": "C:\\Users\\arnau\\Desktop\\Agent owl"
+    "MCP_TIMEOUT": "30000",
+    "MCP_TOOL_TIMEOUT": "60000",
+    "ATUM_PROJECT_DIR": "C:\\Users\\arnau\\Desktop\\agent-owl"
   }
 }
